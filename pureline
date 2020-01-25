@@ -356,6 +356,27 @@ function kubernetes_module {
 }
 
 # -----------------------------------------------------------------------------
+# append to prompt: default kubernetes context/namespace from $KUBECONFIG
+# arg: $1 foreground color
+# arg; $2 background color
+function allianz_module {
+    local bg_color=$1                  # Set the background color
+    local fg_color=$2                  # Set the foregropund color
+
+    if [[ ! -z "$ALLIANZ" ]]; then
+        local allianzsymbol="✔ "
+
+        ns=$( kubectl config view -o jsonpath="{.contexts[?(@.name == \"${context}\")].context.namespace}" )
+
+        local content=" ${allianzsymbol} "
+        PS1+=$(section_end $bg_color)
+        PS1+=$(section_content $fg_color $bg_color "$content")
+        __last_color=$bg_color
+        unset __last_color
+    fi
+}
+
+# -----------------------------------------------------------------------------
 function pureline_ps1 {
     __return_code=$?    # save the return code
     local TITLEBAR='\[\e]2; \u@\h: \w \a';  # set console title
