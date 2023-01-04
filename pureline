@@ -99,13 +99,13 @@ function ssh_module {
         local content="${PL_SYMBOLS[ssh]}"
         if [ "$PL_SSH_SHOW_HOST" = true ]; then
             if [ "$PL_SSH_USE_IP" = true ]; then
-                content+=" $(ip_address)"
+                content+="$(ip_address)"
             else
                 content+=" \h"
             fi
         fi
         PS1+="$(section_end $fg_color $bg_color)"
-        PS1+="$(section_content $fg_color $bg_color " $content ")"
+        PS1+="$(section_content $fg_color $bg_color " $content")"
         __last_color="$bg_color"
     fi
 }
@@ -343,13 +343,21 @@ function newline_module {
 function kubernetes_module {
     local bg_color=$1                  # Set the background color
     local fg_color=$2                  # Set the foregropund color
-    local kubesymbol=$'\xE2\x8E\x88'
-    local context ns
+    # local kubesymbol=$'\xE2\x8E\x88'
+    local kubesymbol=$'K'
+    # local context ns
+    local context
 
     context=$(kubectl config current-context)
-    ns=$( kubectl config view -o jsonpath="{.contexts[?(@.name == \"${context}\")].context.namespace}" )
+    # ns=$( kubectl config view -o jsonpath="{.contexts[?(@.name == \"${context}\")].context.namespace}" )
 
-    local content="${kubesymbol} ${context}:${ns}"
+    # local content="${kubesymbol} ${context}:${ns}"
+    local content="${kubesymbol} ${context}"
+
+    if [ ${context} = mobilitu-prod ]; then
+        bg_color="MyPurple"
+    fi
+
     PS1+=$(section_end $bg_color)
     PS1+=$(section_content $fg_color $bg_color " $content ")
     __last_color=$bg_color
@@ -366,6 +374,20 @@ function allianz_module {
     if [[ ! -z "$ALLIANZ" ]]; then
         local allianzsymbol="✔ "
         local content=" ${allianzsymbol} "
+        PS1+=$(section_end $fg_color $bg_color)
+        PS1+=$(section_content $fg_color $bg_color "$content")
+        __last_color=$bg_color
+        unset __last_color
+    fi
+}
+
+function generali_module {
+    local bg_color=$1
+    local fg_color=$1
+
+    if [[ ! -z "$GENERALI" ]]; then
+        local generalisymbol="✔ "
+        local content=" ${generalisymbol} "
         PS1+=$(section_end $fg_color $bg_color)
         PS1+=$(section_content $fg_color $bg_color "$content")
         __last_color=$bg_color
