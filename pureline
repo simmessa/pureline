@@ -354,12 +354,60 @@ function kubernetes_module {
     # local content="${kubesymbol} ${context}:${ns}"
     local content="${kubesymbol} ${context}"
 
-    if [ ${context} = mobilitu-prod ]; then
+    if [[ ${context} =~ prod ]]; then
         bg_color="MyPurple"
     fi
 
+    if [[ ${context} =~ kube ]]; then
+        bg_color="MyYellow"
+        fg_color="Black"
+    fi
+    
     PS1+=$(section_end $bg_color)
     PS1+=$(section_content $fg_color $bg_color " $content ")
+    __last_color=$bg_color
+}
+
+# -----------------------------------------------------------------------------
+# append to prompt: default kubernetes context/namespace from $KUBECONFIG
+# arg: $1 foreground color
+# arg; $2 background color
+function proxy_module {
+    local bg_color=$1                  # Set the background color
+    local fg_color=$2                  # Set the foregropund color
+    if [[ -f /home/simmessa/dotsim/generali_proxy ]]; then
+        read GENERALI < /home/simmessa/dotsim/generali_proxy
+    fi
+    local proxysymbol=$" ${GENERALI}"
+    local content="${proxysymbol} "    
+
+    if [[ ${GENERALI} =~ OFF ]]; then
+        bg_color="Black"
+        local proxysymbol=$""
+        local content="${proxysymbol}"    
+    fi
+
+    if [[ ${GENERALI} =~ CNTLM ]]; then
+        bg_color="MyYellow"
+        fg_color="Black"
+    fi
+
+    PS1+=$(section_end $bg_color)
+    PS1+=$(section_content $fg_color $bg_color "$content")
+    __last_color=$bg_color
+}
+
+# -----------------------------------------------------------------------------
+# append to prompt: default kubernetes context/namespace from $KUBECONFIG
+# arg: $1 foreground color
+# arg; $2 background color
+function aws_module {
+    local bg_color=$1                  # Set the background color
+    local fg_color=$2                  # Set the foregropund color
+    local content="A ${AWSUME_PROFILE} "    
+
+    PS1+=$(section_end $bg_color)
+    PS1+=$(section_content $fg_color $bg_color " $content")
     __last_color=$bg_color
 }
 
