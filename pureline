@@ -411,6 +411,11 @@ function bw_module {
     if [[ -f /home/simmessa/dotsim/bw_status ]]; then
         read BW_STATUS < /home/simmessa/dotsim/bw_status
     fi
+    # # check if bw is fine!
+    # if ! bw; then
+    #     resource
+    # fi
+
     local bwsymbol=$" ${BW_STATUS}"
     local content="${bwsymbol} "    
 
@@ -418,6 +423,26 @@ function bw_module {
     PS1+=$(section_content $fg_color $bg_color "$content")
     __last_color=$bg_color
 }
+
+function cc_module {
+    local bg_color=$1                  # Set the background color
+    local fg_color=$2                  # Set the foregropund color
+
+    if [[ -f /home/simmessa/dotsim/states/cc_profiles_active ]]; then
+        read CC_ACTIVE < /home/simmessa/dotsim/states/cc_profiles_active
+    fi
+    # if [[ -f /home/simmessa/dotsim/bw_status ]]; then
+    #     read BW_STATUS < /home/simmessa/dotsim/bw_status
+    # fi
+
+    local ccsymbol=$" ${CC_ACTIVE}"
+    local content="${ccsymbol} "
+
+    PS1+=$(section_end $bg_color)
+    PS1+=$(section_content $fg_color $bg_color "$content")
+    __last_color=$bg_color
+}
+
 
 # -----------------------------------------------------------------------------
 # append to prompt: default kubernetes context/namespace from $KUBECONFIG
